@@ -4,7 +4,7 @@
 
 *AWS Fargate + Lambda + Serverless Framework = Bliss*
 
-This is a companion project for the blog post [How to run long-running processes with Fargate and Lambda in a Serverless app]().
+This is a companion project for the blog post [How to run long-running processes with Fargate and Lambda in a Serverless app](https://serverless.com/blog/serverless-application-for-long-running-process-fargate-lambda/).
 
 This reference application shows you how to create an end-to-end serverless application that extracts thumbnails from video files. But, oh no, processing video files is a long-running process! AWS Fargate to the rescue.
 
