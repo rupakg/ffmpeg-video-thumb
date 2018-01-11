@@ -1,0 +1,77 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: rg-video-to-thumbnail
+
+plugins:
+  - serverless-pseudo-parameters
+
+custom:
+  defaultStage: dev
+  currentStage: ${opt:stage, self:custom.defaultStage}
+  currentRegion: ${file(./config.${self:custom.currentStage}.json):region}
+  bucket: ${file(./config.${self:custom.currentStage}.json):bucket}
+  thumbnails_folder: ${file(./config.${self:custom.currentStage}.json):thumbnails_folder}
+  thumbnails_path: ${self:custom.bucket}/${self:custom.thumbnails_folder}
+  ecsTaskName: ${file(./config.${self:custom.currentStage}.json):ecsTaskName}
+  ecsTaskVpcSubnet1: ${file(./config.${self:custom.currentStage}.json):ecsTaskVpcSubnet1}
+  ecsTaskVpcSubnet2: ${file(./config.${self:custom.currentStage}.json):ecsTaskVpcSubnet2}
+  clusterName: ${file(./config.${self:custom.currentStage}.json):clusterName}
+  # clusterArn: { "Fn::Join" : ["", [ "arn:aws:ecs:", { "Ref" : "AWS::Region" }, ":", { "Ref" : "AWS::AccountId" }, ":cluster/default" ] ] }
+  # taskDefArn: { "Fn::Join" : ["", [ "arn:aws:ecs:", { "Ref" : "AWS::Region" }, ":", { "Ref" : "AWS::AccountId" }, ":task-definition/*:*" ] ] }
+  execRoleArn: { "Fn::Join" : ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":role/ecsTaskExecutionRole" ] ] }
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${self:custom.currentStage}
+  region: ${self:custom.currentRegion}
+  environment:
+    ECS_CLUSTER_NAME: ${self:custom.clusterName}
+    ECS_TASK_DEFINITION: ${self:custom.ecsTaskName}
+    ECS_TASK_VPC_SUBNET_1: ${self:custom.ecsTaskVpcSubnet1}
+    ECS_TASK_VPC_SUBNET_2: ${self:custom.ecsTaskVpcSubnet2}
+    OUTPUT_S3_PATH: ${self:custom.thumbnails_path}
+    OUTPUT_S3_AWS_REGION: ${self:custom.currentRegion}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - ecs:RunTask
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - iam:PassRole
+      Resource: ${self:custom.execRoleArn}
+    - Effect: "Allow"
+      Action:
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+
+functions:
+  triggerOnUploadVideo:
+    handler: handler.triggerOnUploadVideo
+    events:
+      - s3:
+          bucket: ${self:custom.bucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .mp4
+  triggerOnThumbnailCreation:
+    handler: handler.triggerOnThumbnailCreation
+    events:
+      - s3:
+          bucket: ${self:custom.bucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: ${self:custom.thumbnails_folder}/
+            - suffix: .png

@@ -1,0 +1,36 @@
+{
+  "Records": [{
+    "eventVersion": "2.0",
+    "eventSource": "aws:s3",
+    "awsRegion": "us-east-1",
+    "eventTime": "2018-01-04T08:42:31.834Z",
+    "eventName": "ObjectCreated:CompleteMultipartUpload",
+    "userIdentity": {
+      "principalId": "XXXXXXXXXXXXXX"
+    },
+    "requestParameters": {
+      "sourceIPAddress": "11.11.11.11"
+    },
+    "responseElements": {
+      "x-amz-request-id": "XXXXXXXXXXXXXXXX",
+      "x-amz-id-2": "9RMy27y/XXXXXXXXXXXXXXXXd82+i1l15ufCE0LL/mGmeXv/7h7CeXXXXXXXXXXXXXXXX01cf810mc="
+    },
+    "s3": {
+      "s3SchemaVersion": "1.0",
+      "configurationId": "5ea6e383-XXXXXXXXXXXXXXXX-a3d3-XXXXXXXXXXXXXXXX",
+      "bucket": {
+        "name": "my-bucket",
+        "ownerIdentity": {
+          "principalId": "XXXXXXXXXXXXXX"
+        },
+        "arn": "arn:aws:s3:::my-bucket"
+      },
+      "object": {
+        "key": "test_00-08.mp4",
+        "size": 32822684,
+        "eTag": "XX80aacXXXXXXXXXXXXXXd28894329-2",
+        "sequencer": "XXXXXXXXXXXXXX153D774D"
+      }
+    }
+  }]
+}

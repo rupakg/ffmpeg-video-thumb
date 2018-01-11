@@ -1,0 +1,9 @@
+{
+  "region": "us-east-1",
+  "bucket": "<your-s3-bucket-name>",
+  "thumbnails_folder": "<your-thumbnail-folder-name>",
+  "ecsTaskName": "<your-ecs-task-definition-name>",
+  "ecsTaskVpcSubnet1": "<your-ecs-task-subnet>",
+  "ecsTaskVpcSubnet2": "<your-ecs-task-subnet>",
+  "clusterName": "<your-ecs-cluster-name>"
+}
